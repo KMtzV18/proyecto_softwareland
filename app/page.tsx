@@ -4,6 +4,9 @@ import Imagen from "./components/Imagen";
 import Contador from "./components/Contador";
 import ImagenCambiante from "./components/ImagenCambiante";
 import CambiarColorFondo from "./components/CambiarColorFondo";
+import BotonToast from "./components/BotonToast";
+import BotonModal from "./components/BotonModal";
+import Carrusel from "./components/Carrusel";
 
 export default function Home() {
   return (
@@ -30,9 +33,12 @@ export default function Home() {
         ancho="w-100"
         colorSombra="shadow-lg"
       />
-      <Contador/>
-      <ImagenCambiante/>
-      <CambiarColorFondo/>
+      <Contador />
+      <ImagenCambiante />
+      <CambiarColorFondo />
+      <BotonToast />
+      <BotonModal />
+      <Carrusel />
     </div>
   );
 }
