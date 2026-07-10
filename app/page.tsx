@@ -1,6 +1,9 @@
 import Titulo from "./components/Titulo";
 import Parrafo from "./components/Parrafo";
 import Imagen from "./components/Imagen";
+import Contador from "./components/Contador";
+import ImagenCambiante from "./components/ImagenCambiante";
+import CambiarColorFondo from "./components/CambiarColorFondo";
 
 export default function Home() {
   return (
@@ -27,6 +30,9 @@ export default function Home() {
         ancho="w-100"
         colorSombra="shadow-lg"
       />
+      <Contador/>
+      <ImagenCambiante/>
+      <CambiarColorFondo/>
     </div>
   );
 }
