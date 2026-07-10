@@ -1,0 +1,32 @@
+import Titulo from "./components/Titulo";
+import Parrafo from "./components/Parrafo";
+import Imagen from "./components/Imagen";
+
+export default function Home() {
+  return (
+    <div className='flex flex-col items-center justify-center min-h-screen py-10'>
+      <Titulo 
+        texto="Prueba de componente Titulo" 
+        fuente="font-serif" 
+        tamano="text-4xl" 
+        color="text-white" 
+      />
+      
+      <Parrafo 
+        contenido="Prueba de componente Parrafo" 
+        fuente="font-mono" 
+        tamano="text-lg" 
+        color="text-gray-400" 
+      />
+      
+      <Imagen 
+        src="/imgs/SoftLand.jpg"
+        alt="SoftLand" 
+        tamanoBorde="rounded-3xl"
+        altura="h-80"
+        ancho="w-100"
+        colorSombra="shadow-lg"
+      />
+    </div>
+  );
+}
