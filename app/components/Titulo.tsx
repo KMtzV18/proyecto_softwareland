@@ -9,7 +9,7 @@ export default function Titulo({
   texto, 
   fuente = 'font-sans', 
   tamano = 'text-3xl', 
-  color = 'text-black' 
+  color = 'text-black',
 }: TituloProps) {
   return (
     <h1 className={`${fuente} ${tamano} ${color} font-bold my-4`}>

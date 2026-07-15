@@ -7,6 +7,8 @@ import CambiarColorFondo from "./components/CambiarColorFondo";
 import BotonToast from "./components/BotonToast";
 import BotonModal from "./components/BotonModal";
 import Carrusel from "./components/Carrusel";
+import TablaFlowbite from "./components/TablaFlowbite";
+import Datos from "../data/datos.json";
 
 export default function Home() {
   return (
@@ -16,6 +18,12 @@ export default function Home() {
         fuente="font-serif" 
         tamano="text-4xl" 
         color="text-white" 
+      />
+      <Titulo
+        texto="Segundo texto"
+        fuente="font-sans"
+        tamano="text-2xl"
+        color="text-blue-500"
       />
       
       <Parrafo 
@@ -39,6 +47,7 @@ export default function Home() {
       <BotonToast />
       <BotonModal />
       <Carrusel />
+      <TablaFlowbite datos={Datos}/>
     </div>
   );
 }

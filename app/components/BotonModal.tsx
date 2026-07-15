@@ -17,7 +17,7 @@ export default function BotonModal() {
     <div className="flex justify-center p-4">
       <button
         onClick={mostrarModal}
-        className="m-2 bg-blue-500 hover:bg-blue-600 p-2 text-white font-bold rounded transition-colors cursor-pointer"
+        className="m-2 bg-gray-600 hover:bg-gray-800 p-2 text-white font-bold rounded transition-colors cursor-pointer"
       >
         Mostrar modal
       </button>

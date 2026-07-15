@@ -1,11 +1,7 @@
 "use client";
 import { Carousel } from "flowbite-react";
-// Importamos Font Awesome para personalizar las flechas con el color que quieras
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faChevronLeft,
-  faChevronRight,
-} from "@fortawesome/free-solid-svg-icons";
+import {faChevronLeft,faChevronRight} from "@fortawesome/free-solid-svg-icons";
 
 export default function MiCarousel() {
   const imagenes: string[] = [
