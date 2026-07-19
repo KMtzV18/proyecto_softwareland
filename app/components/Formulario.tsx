@@ -19,6 +19,102 @@ export default function Formulario() {
     const [password2, setPassword2] = useState("");
     const [edad, setEdad] = useState("");
 
+    const [errores, setErrores] = useState({
+      nombre: "",
+      apellidos: "",
+      email: "",
+      edad: "",
+      fecha: ""
+    });
+
+    const obtenerHoy = () => {
+      const d = new Date();
+      d.setHours(0, 0, 0, 0);
+      return d;
+    };
+
+    const cambioNombre = (e: React.ChangeEvent<HTMLInputElement>) => {
+      const valorOriginal = e.target.value;
+      const valorFiltrado = valorOriginal.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/g, '');
+      setNombre(valorFiltrado);
+      
+      if (valorFiltrado.trim() === "") {
+        setErrores(prev => ({ ...prev, nombre: "El nombre es requerido y solo acepta letras." }));
+      } else {
+        setErrores(prev => ({ ...prev, nombre: "" }));
+      }
+    };
+    
+    const cambioApellidos = (e: React.ChangeEvent<HTMLInputElement>) => {
+      const valorOriginal = e.target.value;
+      const valorFiltrado = valorOriginal.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/g, '');
+      setApellidos(valorFiltrado);
+      
+      if (valorFiltrado.trim() === "") {
+        setErrores(prev => ({ ...prev, apellidos: "El apellido es requerido y solo acepta letras." }));
+      } else {
+        setErrores(prev => ({ ...prev, apellidos: "" }));
+      }
+    };
+    
+    const cambioEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
+      const valor = e.target.value;
+      setEmail(valor);
+      
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (valor.trim() === "") {
+        setErrores(prev => ({ ...prev, email: "El correo electrónico es requerido." }));
+      } else if (!emailRegex.test(valor)) {
+        setErrores(prev => ({ ...prev, email: "Debe introducir un formato de correo electrónico válido." }));
+      } else {
+        setErrores(prev => ({ ...prev, email: "" }));
+      }
+    };
+    
+    const cambioPassword = (e: React.ChangeEvent<HTMLInputElement>) => {
+      setPassword(e.target.value);
+    };
+    
+    const cambioPassword2 = (e: React.ChangeEvent<HTMLInputElement>) => {
+      setPassword2(e.target.value);
+    };
+    
+    const cambioEdad = (e: React.ChangeEvent<HTMLInputElement>) => {
+      const valorOriginal = e.target.value;
+      // Only allow numbers
+      const valorFiltrado = valorOriginal.replace(/[^0-9]/g, '');
+      setEdad(valorFiltrado);
+      
+      if (valorFiltrado === "") {
+        setErrores(prev => ({ ...prev, edad: "La edad es requerida y solo acepta números positivos." }));
+      } else {
+        const num = parseInt(valorFiltrado, 10);
+        if (num <= 0 || num > 100) {
+          setErrores(prev => ({ ...prev, edad: "La edad debe ser un número positivo hasta 100." }));
+        } else {
+          setErrores(prev => ({ ...prev, edad: "" }));
+        }
+      }
+    };
+    
+    const cambioFecha = (date: Date | null) => {
+      setFecha(date);
+      if (!date) {
+        setErrores(prev => ({ ...prev, fecha: "La fecha de registro es requerida." }));
+        return;
+      }
+      
+      const hoy = obtenerHoy();
+      const seleccionada = new Date(date);
+      seleccionada.setHours(0, 0, 0, 0);
+      
+      if (seleccionada < hoy) {
+        setErrores(prev => ({ ...prev, fecha: "La fecha debe ser a partir del día en curso." }));
+      } else {
+        setErrores(prev => ({ ...prev, fecha: "" }));
+      }
+    };
+
     const cambioSexo = (e: React.ChangeEvent<HTMLInputElement>) => {
       setSexo(e.target.value);
     };
@@ -33,16 +129,54 @@ export default function Formulario() {
 
     const [showModal, setShowModal] = useState<boolean>(false);
     
-      const mostrarModal = (): void => {
-        setShowModal(true);
-      };
+    const mostrarModal = (): void => {
+      setShowModal(true);
+    };
     
-      const ocultarModal = (): void => {
-        setShowModal(false);
-      };
+    const ocultarModal = (): void => {
+      setShowModal(false);
+    };
 
     const manejarEnvio = (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
+      
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      const hoy = obtenerHoy();
+      
+      const errs = {
+        nombre: nombre.trim() === "" ? "El nombre es requerido." : (/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/.test(nombre) ? "El nombre solo acepta letras." : ""),
+        apellidos: apellidos.trim() === "" ? "El apellido es requerido." : (/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/.test(apellidos) ? "El apellido solo acepta letras." : ""),
+        email: email.trim() === "" ? "El correo electrónico es requerido." : (!emailRegex.test(email) ? "Debe introducir un formato de correo electrónico válido." : ""),
+        edad: "",
+        fecha: ""
+      };
+      
+      if (edad === "") {
+        errs.edad = "La edad es requerida.";
+      } else {
+        const num = parseInt(edad, 10);
+        if (isNaN(num) || num <= 0 || num > 100) {
+          errs.edad = "La edad debe ser un número positivo hasta 100.";
+        }
+      }
+      
+      if (!fecha) {
+        errs.fecha = "La fecha de registro es requerida.";
+      } else {
+        const seleccionada = new Date(fecha);
+        seleccionada.setHours(0, 0, 0, 0);
+        if (seleccionada < hoy) {
+          errs.fecha = "La fecha debe ser a partir del día en curso.";
+        }
+      }
+      
+      setErrores(errs);
+      
+      const tieneErrores = Object.values(errs).some(err => err !== "");
+      if (tieneErrores) {
+        return;
+      }
+      
       mostrarModal();
     };
 
@@ -59,6 +193,13 @@ export default function Formulario() {
       setFecha(new Date());
       setTerminos(false);
       setAviso(false);
+      setErrores({
+        nombre: "",
+        apellidos: "",
+        email: "",
+        edad: "",
+        fecha: ""
+      });
     };
 
   return (
@@ -66,39 +207,85 @@ export default function Formulario() {
     <form onSubmit={manejarEnvio} className="flex max-w-md flex-col gap-4 border-4 border-white p-10 m-4 rounded-xl">
       <div>
         <div className="mb-2 block">
-          <Label htmlFor="email1">Nombre</Label>
+          <Label htmlFor="nombre" color={errores.nombre ? "failure" : (nombre.trim() !== "" ? "success" : undefined)}>Nombre</Label>
         </div>
-        <TextInput value={nombre} onChange={(e) => setNombre(e.target.value)} id="email1" type="text" placeholder="Juan" required />
+        <TextInput 
+          value={nombre} 
+          onChange={cambioNombre} 
+          id="nombre" 
+          type="text" 
+          placeholder="Juan" 
+          required 
+          color={errores.nombre ? "failure" : (nombre.trim() !== "" ? "success" : undefined)}
+        />
+        {errores.nombre && (
+          <p className="mt-1 text-xs text-rose-500 font-medium">{errores.nombre}</p>
+        )}
       </div>
       <div>
         <div className="mb-2 block">
-          <Label htmlFor="email1">Apellidos</Label>
+          <Label htmlFor="apellidos" color={errores.apellidos ? "failure" : (apellidos.trim() !== "" ? "success" : undefined)}>Apellidos</Label>
         </div>
-        <TextInput value={apellidos} onChange={(e) => setApellidos(e.target.value)} id="email1" type="text" placeholder="Pérez" required />
+        <TextInput 
+          value={apellidos} 
+          onChange={cambioApellidos} 
+          id="apellidos" 
+          type="text" 
+          placeholder="Pérez" 
+          required 
+          color={errores.apellidos ? "failure" : (apellidos.trim() !== "" ? "success" : undefined)}
+        />
+        {errores.apellidos && (
+          <p className="mt-1 text-xs text-rose-500 font-medium">{errores.apellidos}</p>
+        )}
       </div>
       <div>
         <div className="mb-2 block">
-          <Label htmlFor="email1">Email</Label>
+          <Label htmlFor="email" color={errores.email ? "failure" : (email.trim() !== "" ? "success" : undefined)}>Email</Label>
         </div>
-        <TextInput value={email} onChange={(e) => setEmail(e.target.value)} id="email1" type="email" placeholder="name@gmail.com" required />
+        <TextInput 
+          value={email} 
+          onChange={cambioEmail} 
+          id="email" 
+          type="email" 
+          placeholder="name@gmail.com" 
+          required 
+          color={errores.email ? "failure" : (email.trim() !== "" ? "success" : undefined)}
+        />
+        {errores.email && (
+          <p className="mt-1 text-xs text-rose-500 font-medium">{errores.email}</p>
+        )}
       </div>
       <div>
         <div className="mb-2 block">
-          <Label htmlFor="password1">Contraseña</Label>
+          <Label htmlFor="contrasenia">Contraseña</Label>
         </div>
-        <TextInput value={password} onChange={(e) => setPassword(e.target.value)} id="password1" type="password" required />
+        <TextInput value={password} onChange={cambioPassword} id="contrasenia" type="password" required />
       </div>
       <div>
         <div className="mb-2 block">
-          <Label htmlFor="password2">Verificar Contraseña</Label>
+          <Label htmlFor="contrasenia2">Verificar Contraseña</Label>
         </div>
-        <TextInput value={password2} onChange={(e) => setPassword2(e.target.value)} id="password2" type="password" required />
+        <TextInput value={password2} onChange={cambioPassword2} id="contrasenia2" type="password" required />
       </div>
       <div>
         <div className="mb-2 block">
-          <Label htmlFor="edad">Edad</Label>
+          <Label htmlFor="edad" color={errores.edad ? "failure" : (edad !== "" ? "success" : undefined)}>Edad</Label>
         </div>
-        <TextInput value={edad} onChange={(e) => setEdad(e.target.value)} id="edad" type="number" placeholder="18" required />
+        <TextInput 
+          value={edad} 
+          onChange={cambioEdad} 
+          id="edad" 
+          type="text" 
+          inputMode="numeric"
+          pattern="[0-9]*"
+          placeholder="18" 
+          required 
+          color={errores.edad ? "failure" : (edad !== "" ? "success" : undefined)}
+        />
+        {errores.edad && (
+          <p className="mt-1 text-xs text-rose-500 font-medium">{errores.edad}</p>
+        )}
       </div>
       <div className="flex items-center gap-2">
         <Label htmlFor="sexo">Sexo</Label>
@@ -124,30 +311,34 @@ export default function Formulario() {
       </div>
       <div className="max-w-md">
       <div className="mb-2 block">
-        <Label htmlFor="comment">¿Qué opinas de nosotros?</Label>
+        <Label htmlFor="comentario">¿Qué opinas de nosotros?</Label>
       </div>
-      <Textarea value={comentario} onChange={cambioComentario} id="comment" placeholder="Deja un comentario..." required rows={4} />
+      <Textarea value={comentario} onChange={cambioComentario} id="comentario" placeholder="Deja un comentario..." required rows={4} />
     </div>
     <div>
-  <div className="mb-2 block">
-    <Label htmlFor="fecha">Fecha de Registro</Label>
-  </div>
-  <Datepicker
-    id="fecha"
-    value={fecha}
-    onChange={(date: Date | null) => setFecha(date)}
-    language="es"
-    required
-  />
-</div>
+      <div className="mb-2 block">
+        <Label htmlFor="fecha" color={errores.fecha ? "failure" : (fecha ? "success" : undefined)}>Fecha de Registro</Label>
+      </div>
+      <Datepicker
+        id="fecha"
+        value={fecha}
+        onChange={cambioFecha}
+        language="es"
+        minDate={obtenerHoy()}
+        required
+      />
+      {errores.fecha && (
+        <p className="mt-1 text-xs text-rose-500 font-medium">{errores.fecha}</p>
+      )}
+    </div>
     <div className="flex flex-col items-center gap-2 mt-5 mb-3 ">
         <div className="flex items-center gap-2">
-        <Checkbox checked={terminos} onChange={(e) => setTerminos(e.target.checked)} id="remember" />
-        <Label htmlFor="remember">¿Estas de acuerdo con los terminos y condiciones?</Label>
+        <Checkbox checked={terminos} onChange={(e) => setTerminos(e.target.checked)} id="terminos" />
+        <Label htmlFor="terminos">¿Estas de acuerdo con los terminos y condiciones?</Label>
         </div>
         <div className="flex items-center gap-2">
-        <Checkbox checked={aviso} onChange={(e) => setAviso(e.target.checked)} id="remember" />
-        <Label htmlFor="remember">Acepto el aviso de privacidad</Label>
+        <Checkbox checked={aviso} onChange={(e) => setAviso(e.target.checked)} id="aviso" />
+        <Label htmlFor="aviso">Acepto el aviso de privacidad</Label>
         </div>
       </div>
     
