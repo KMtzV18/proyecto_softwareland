@@ -1,378 +1,583 @@
 "use client";
 import { useState } from "react";
 import { Modal, ModalHeader, ModalBody, ModalFooter } from "flowbite-react";
-import {Button, Checkbox, Label, TextInput, Datepicker, Radio, Select, Textarea } from "flowbite-react";
+import {
+  Button,
+  Checkbox,
+  Label,
+  TextInput,
+  Datepicker,
+  Radio,
+  Select,
+  Textarea,
+} from "flowbite-react";
+import { UserRecord } from "./TablaFormulario";
 
+interface FormularioProps {
+  onSave?: (record: UserRecord) => void;
+}
 
-export default function Formulario() {
+export default function Formulario({ onSave }: FormularioProps) {
+  const [date, setDate] = useState<Date | null>(new Date());
+  const [terms, setTerms] = useState(false);
+  const [privacyNotice, setPrivacyNotice] = useState(false);
+  const [gender, setGender] = useState("");
+  const [role, setRole] = useState("");
+  const [comment, setComment] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [age, setAge] = useState("");
+  const [showModal, setShowModal] = useState<boolean>(false);
+  const [action, setAction] = useState<"save" | "show" | "">("");
 
-    const [fecha, setFecha] = useState<Date | null>(new Date());
-    const [terminos, setTerminos] = useState(false);
-    const [aviso, setAviso] = useState(false);
-    const [sexo, setSexo] = useState("");
-    const [rol, setRol] = useState("");
-    const [comentario, setComentario] = useState("");
-    const [nombre, setNombre] = useState("");
-    const [apellidos, setApellidos] = useState("");
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [password2, setPassword2] = useState("");
-    const [edad, setEdad] = useState("");
+  const [errors, setErrors] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    age: "",
+    date: "",
+  });
 
-    const [errores, setErrores] = useState({
-      nombre: "",
-      apellidos: "",
+  const getToday = () => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    return today;
+  };
+
+  const handleFirstNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const originalValue = e.target.value;
+    const filteredValue = originalValue.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/g, "");
+    setFirstName(filteredValue);
+
+    if (filteredValue.trim() === "") {
+      setErrors((prev) => ({
+        ...prev,
+        firstName: "El nombre es requerido y solo acepta letras.",
+      }));
+    } else {
+      setErrors((prev) => ({ ...prev, firstName: "" }));
+    }
+  };
+
+  const handleLastNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const originalValue = e.target.value;
+    const filteredValue = originalValue.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/g, "");
+    setLastName(filteredValue);
+
+    if (filteredValue.trim() === "") {
+      setErrors((prev) => ({
+        ...prev,
+        lastName: "El apellido es requerido y solo acepta letras.",
+      }));
+    } else {
+      setErrors((prev) => ({ ...prev, lastName: "" }));
+    }
+  };
+
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setEmail(value);
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (value.trim() === "") {
+      setErrors((prev) => ({
+        ...prev,
+        email: "El correo electrónico es requerido.",
+      }));
+    } else if (!emailRegex.test(value)) {
+      setErrors((prev) => ({
+        ...prev,
+        email: "Debe introducir un formato de correo electrónico válido.",
+      }));
+    } else {
+      setErrors((prev) => ({ ...prev, email: "" }));
+    }
+  };
+
+  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setPassword(e.target.value);
+  };
+
+  const handleConfirmPasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setConfirmPassword(e.target.value);
+  };
+
+  const handleAgeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const originalValue = e.target.value;
+    const filteredValue = originalValue.replace(/[^0-9]/g, "");
+    setAge(filteredValue);
+
+    if (filteredValue === "") {
+      setErrors((prev) => ({
+        ...prev,
+        age: "La edad es requerida y solo acepta números positivos.",
+      }));
+    } else {
+      const num = parseInt(filteredValue, 10);
+      if (num <= 0 || num > 100) {
+        setErrors((prev) => ({
+          ...prev,
+          age: "La edad debe ser un número positivo hasta 100.",
+        }));
+      } else {
+        setErrors((prev) => ({ ...prev, age: "" }));
+      }
+    }
+  };
+
+  const handleDateChange = (selectedDate: Date | null) => {
+    setDate(selectedDate);
+    if (!selectedDate) {
+      setErrors((prev) => ({
+        ...prev,
+        date: "La fecha de registro es requerida.",
+      }));
+      return;
+    }
+
+    const today = getToday();
+    const currentDate = new Date(selectedDate);
+    currentDate.setHours(0, 0, 0, 0);
+
+    if (currentDate < today) {
+      setErrors((prev) => ({
+        ...prev,
+        date: "La fecha debe ser a partir del día en curso.",
+      }));
+    } else {
+      setErrors((prev) => ({ ...prev, date: "" }));
+    }
+  };
+
+  const handleGenderChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setGender(e.target.value);
+  };
+
+  const handleRoleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setRole(e.target.value);
+  };
+
+  const handleCommentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setComment(e.target.value);
+  };
+
+  const openModal = (): void => {
+    setShowModal(true);
+  };
+
+  const closeModal = (): void => {
+    setShowModal(false);
+  };
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const today = getToday();
+
+    const validationErrors = {
+      firstName:
+        firstName.trim() === ""
+          ? "El nombre es requerido."
+          : /[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/.test(firstName)
+            ? "El nombre solo acepta letras."
+            : "",
+      lastName:
+        lastName.trim() === ""
+          ? "El apellido es requerido."
+          : /[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/.test(lastName)
+            ? "El apellido solo acepta letras."
+            : "",
+      email:
+        email.trim() === ""
+          ? "El correo electrónico es requerido."
+          : !emailRegex.test(email)
+            ? "Debe introducir un formato de correo electrónico válido."
+            : "",
+      age: "",
+      date: "",
+    };
+
+    if (age === "") {
+      validationErrors.age = "La edad es requerida.";
+    } else {
+      const num = parseInt(age, 10);
+      if (isNaN(num) || num <= 0 || num > 100) {
+        validationErrors.age = "La edad debe ser un número positivo hasta 100.";
+      }
+    }
+
+    if (!date) {
+      validationErrors.date = "La fecha de registro es requerida.";
+    } else {
+      const selectedDate = new Date(date);
+      selectedDate.setHours(0, 0, 0, 0);
+      if (selectedDate < today) {
+        validationErrors.date = "La fecha debe ser a partir del día en curso.";
+      }
+    }
+
+    setErrors(validationErrors);
+
+    const hasErrors = Object.values(validationErrors).some((err) => err !== "");
+    if (hasErrors) {
+      return;
+    }
+
+    if (action === "save") {
+      if (onSave) {
+        onSave({
+          firstName,
+          lastName,
+          email,
+          password,
+          age,
+          gender,
+          role,
+          comment,
+          date: date ? date.toLocaleDateString("es-ES") : "",
+        });
+      }
+      resetForm();
+    } else if (action === "show") {
+      openModal();
+    }
+  };
+
+  const resetForm = (): void => {
+    setFirstName("");
+    setLastName("");
+    setEmail("");
+    setPassword("");
+    setConfirmPassword("");
+    setAge("");
+    setGender("");
+    setRole("");
+    setComment("");
+    setDate(new Date());
+    setTerms(false);
+    setPrivacyNotice(false);
+    setErrors({
+      firstName: "",
+      lastName: "",
       email: "",
-      edad: "",
-      fecha: ""
+      age: "",
+      date: "",
     });
-
-    const obtenerHoy = () => {
-      const d = new Date();
-      d.setHours(0, 0, 0, 0);
-      return d;
-    };
-
-    const cambioNombre = (e: React.ChangeEvent<HTMLInputElement>) => {
-      const valorOriginal = e.target.value;
-      const valorFiltrado = valorOriginal.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/g, '');
-      setNombre(valorFiltrado);
-      
-      if (valorFiltrado.trim() === "") {
-        setErrores(prev => ({ ...prev, nombre: "El nombre es requerido y solo acepta letras." }));
-      } else {
-        setErrores(prev => ({ ...prev, nombre: "" }));
-      }
-    };
-    
-    const cambioApellidos = (e: React.ChangeEvent<HTMLInputElement>) => {
-      const valorOriginal = e.target.value;
-      const valorFiltrado = valorOriginal.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/g, '');
-      setApellidos(valorFiltrado);
-      
-      if (valorFiltrado.trim() === "") {
-        setErrores(prev => ({ ...prev, apellidos: "El apellido es requerido y solo acepta letras." }));
-      } else {
-        setErrores(prev => ({ ...prev, apellidos: "" }));
-      }
-    };
-    
-    const cambioEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
-      const valor = e.target.value;
-      setEmail(valor);
-      
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (valor.trim() === "") {
-        setErrores(prev => ({ ...prev, email: "El correo electrónico es requerido." }));
-      } else if (!emailRegex.test(valor)) {
-        setErrores(prev => ({ ...prev, email: "Debe introducir un formato de correo electrónico válido." }));
-      } else {
-        setErrores(prev => ({ ...prev, email: "" }));
-      }
-    };
-    
-    const cambioPassword = (e: React.ChangeEvent<HTMLInputElement>) => {
-      setPassword(e.target.value);
-    };
-    
-    const cambioPassword2 = (e: React.ChangeEvent<HTMLInputElement>) => {
-      setPassword2(e.target.value);
-    };
-    
-    const cambioEdad = (e: React.ChangeEvent<HTMLInputElement>) => {
-      const valorOriginal = e.target.value;
-      // Only allow numbers
-      const valorFiltrado = valorOriginal.replace(/[^0-9]/g, '');
-      setEdad(valorFiltrado);
-      
-      if (valorFiltrado === "") {
-        setErrores(prev => ({ ...prev, edad: "La edad es requerida y solo acepta números positivos." }));
-      } else {
-        const num = parseInt(valorFiltrado, 10);
-        if (num <= 0 || num > 100) {
-          setErrores(prev => ({ ...prev, edad: "La edad debe ser un número positivo hasta 100." }));
-        } else {
-          setErrores(prev => ({ ...prev, edad: "" }));
-        }
-      }
-    };
-    
-    const cambioFecha = (date: Date | null) => {
-      setFecha(date);
-      if (!date) {
-        setErrores(prev => ({ ...prev, fecha: "La fecha de registro es requerida." }));
-        return;
-      }
-      
-      const hoy = obtenerHoy();
-      const seleccionada = new Date(date);
-      seleccionada.setHours(0, 0, 0, 0);
-      
-      if (seleccionada < hoy) {
-        setErrores(prev => ({ ...prev, fecha: "La fecha debe ser a partir del día en curso." }));
-      } else {
-        setErrores(prev => ({ ...prev, fecha: "" }));
-      }
-    };
-
-    const cambioSexo = (e: React.ChangeEvent<HTMLInputElement>) => {
-      setSexo(e.target.value);
-    };
-    
-    const cambioRol = (e: React.ChangeEvent<HTMLSelectElement>) => {
-      setRol(e.target.value);
-    };
-
-    const cambioComentario = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-      setComentario(e.target.value);
-    };
-
-    const [showModal, setShowModal] = useState<boolean>(false);
-    
-    const mostrarModal = (): void => {
-      setShowModal(true);
-    };
-    
-    const ocultarModal = (): void => {
-      setShowModal(false);
-    };
-
-    const manejarEnvio = (e: React.FormEvent<HTMLFormElement>) => {
-      e.preventDefault();
-      
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      const hoy = obtenerHoy();
-      
-      const errs = {
-        nombre: nombre.trim() === "" ? "El nombre es requerido." : (/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/.test(nombre) ? "El nombre solo acepta letras." : ""),
-        apellidos: apellidos.trim() === "" ? "El apellido es requerido." : (/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/.test(apellidos) ? "El apellido solo acepta letras." : ""),
-        email: email.trim() === "" ? "El correo electrónico es requerido." : (!emailRegex.test(email) ? "Debe introducir un formato de correo electrónico válido." : ""),
-        edad: "",
-        fecha: ""
-      };
-      
-      if (edad === "") {
-        errs.edad = "La edad es requerida.";
-      } else {
-        const num = parseInt(edad, 10);
-        if (isNaN(num) || num <= 0 || num > 100) {
-          errs.edad = "La edad debe ser un número positivo hasta 100.";
-        }
-      }
-      
-      if (!fecha) {
-        errs.fecha = "La fecha de registro es requerida.";
-      } else {
-        const seleccionada = new Date(fecha);
-        seleccionada.setHours(0, 0, 0, 0);
-        if (seleccionada < hoy) {
-          errs.fecha = "La fecha debe ser a partir del día en curso.";
-        }
-      }
-      
-      setErrores(errs);
-      
-      const tieneErrores = Object.values(errs).some(err => err !== "");
-      if (tieneErrores) {
-        return;
-      }
-      
-      mostrarModal();
-    };
-
-    const limpiarFormulario = (): void => {
-      setNombre("");
-      setApellidos("");
-      setEmail("");
-      setPassword("");
-      setPassword2("");
-      setEdad("");
-      setSexo("");
-      setRol("");
-      setComentario("");
-      setFecha(new Date());
-      setTerminos(false);
-      setAviso(false);
-      setErrores({
-        nombre: "",
-        apellidos: "",
-        email: "",
-        edad: "",
-        fecha: ""
-      });
-    };
+  };
 
   return (
-    <>  
-    <form onSubmit={manejarEnvio} className="flex max-w-md flex-col gap-4 border-4 border-white p-10 m-4 rounded-xl">
-      <div>
-        <div className="mb-2 block">
-          <Label htmlFor="nombre" color={errores.nombre ? "failure" : (nombre.trim() !== "" ? "success" : undefined)}>Nombre</Label>
+    <>
+      <form
+        onSubmit={handleSubmit}
+        className="flex max-w-md flex-col gap-4 border-4 border-white p-10 m-4 rounded-xl"
+      >
+        <div>
+          <div className="mb-2 block">
+            <Label
+              htmlFor="nombre"
+              color={
+                errors.firstName
+                  ? "failure"
+                  : firstName.trim() !== ""
+                    ? "success"
+                    : undefined
+              }
+            >
+              Nombre
+            </Label>
+          </div>
+          <TextInput
+            value={firstName}
+            onChange={handleFirstNameChange}
+            id="nombre"
+            type="text"
+            placeholder="Juan"
+            required
+            color={
+              errors.firstName
+                ? "failure"
+                : firstName.trim() !== ""
+                  ? "success"
+                  : undefined
+            }
+          />
+          {errors.firstName && (
+            <p className="mt-1 text-xs text-rose-500 font-medium">
+              {errors.firstName}
+            </p>
+          )}
         </div>
-        <TextInput 
-          value={nombre} 
-          onChange={cambioNombre} 
-          id="nombre" 
-          type="text" 
-          placeholder="Juan" 
-          required 
-          color={errores.nombre ? "failure" : (nombre.trim() !== "" ? "success" : undefined)}
-        />
-        {errores.nombre && (
-          <p className="mt-1 text-xs text-rose-500 font-medium">{errores.nombre}</p>
-        )}
-      </div>
-      <div>
-        <div className="mb-2 block">
-          <Label htmlFor="apellidos" color={errores.apellidos ? "failure" : (apellidos.trim() !== "" ? "success" : undefined)}>Apellidos</Label>
+        <div>
+          <div className="mb-2 block">
+            <Label
+              htmlFor="apellidos"
+              color={
+                errors.lastName
+                  ? "failure"
+                  : lastName.trim() !== ""
+                    ? "success"
+                    : undefined
+              }
+            >
+              Apellidos
+            </Label>
+          </div>
+          <TextInput
+            value={lastName}
+            onChange={handleLastNameChange}
+            id="apellidos"
+            type="text"
+            placeholder="Pérez"
+            required
+            color={
+              errors.lastName
+                ? "failure"
+                : lastName.trim() !== ""
+                  ? "success"
+                  : undefined
+            }
+          />
+          {errors.lastName && (
+            <p className="mt-1 text-xs text-rose-500 font-medium">
+              {errors.lastName}
+            </p>
+          )}
         </div>
-        <TextInput 
-          value={apellidos} 
-          onChange={cambioApellidos} 
-          id="apellidos" 
-          type="text" 
-          placeholder="Pérez" 
-          required 
-          color={errores.apellidos ? "failure" : (apellidos.trim() !== "" ? "success" : undefined)}
-        />
-        {errores.apellidos && (
-          <p className="mt-1 text-xs text-rose-500 font-medium">{errores.apellidos}</p>
-        )}
-      </div>
-      <div>
-        <div className="mb-2 block">
-          <Label htmlFor="email" color={errores.email ? "failure" : (email.trim() !== "" ? "success" : undefined)}>Email</Label>
+        <div>
+          <div className="mb-2 block">
+            <Label
+              htmlFor="email"
+              color={
+                errors.email
+                  ? "failure"
+                  : email.trim() !== ""
+                    ? "success"
+                    : undefined
+              }
+            >
+              Email
+            </Label>
+          </div>
+          <TextInput
+            value={email}
+            onChange={handleEmailChange}
+            id="email"
+            type="email"
+            placeholder="name@gmail.com"
+            required
+            color={
+              errors.email
+                ? "failure"
+                : email.trim() !== ""
+                  ? "success"
+                  : undefined
+            }
+          />
+          {errors.email && (
+            <p className="mt-1 text-xs text-rose-500 font-medium">
+              {errors.email}
+            </p>
+          )}
         </div>
-        <TextInput 
-          value={email} 
-          onChange={cambioEmail} 
-          id="email" 
-          type="email" 
-          placeholder="name@gmail.com" 
-          required 
-          color={errores.email ? "failure" : (email.trim() !== "" ? "success" : undefined)}
-        />
-        {errores.email && (
-          <p className="mt-1 text-xs text-rose-500 font-medium">{errores.email}</p>
-        )}
-      </div>
-      <div>
-        <div className="mb-2 block">
-          <Label htmlFor="contrasenia">Contraseña</Label>
+        <div>
+          <div className="mb-2 block">
+            <Label htmlFor="contrasenia">Contraseña</Label>
+          </div>
+          <TextInput
+            value={password}
+            onChange={handlePasswordChange}
+            id="contrasenia"
+            type="password"
+            required
+          />
         </div>
-        <TextInput value={password} onChange={cambioPassword} id="contrasenia" type="password" required />
-      </div>
-      <div>
-        <div className="mb-2 block">
-          <Label htmlFor="contrasenia2">Verificar Contraseña</Label>
+        <div>
+          <div className="mb-2 block">
+            <Label htmlFor="contrasenia2">Verificar Contraseña</Label>
+          </div>
+          <TextInput
+            value={confirmPassword}
+            onChange={handleConfirmPasswordChange}
+            id="contrasenia2"
+            type="password"
+            required
+          />
         </div>
-        <TextInput value={password2} onChange={cambioPassword2} id="contrasenia2" type="password" required />
-      </div>
-      <div>
-        <div className="mb-2 block">
-          <Label htmlFor="edad" color={errores.edad ? "failure" : (edad !== "" ? "success" : undefined)}>Edad</Label>
+        <div>
+          <div className="mb-2 block">
+            <Label
+              htmlFor="edad"
+              color={
+                errors.age ? "failure" : age !== "" ? "success" : undefined
+              }
+            >
+              Edad
+            </Label>
+          </div>
+          <TextInput
+            value={age}
+            onChange={handleAgeChange}
+            id="edad"
+            type="text"
+            inputMode="numeric"
+            pattern="[0-9]*"
+            placeholder="18"
+            required
+            color={
+              errors.age ? "failure" : age !== "" ? "success" : undefined
+            }
+          />
+          {errors.age && (
+            <p className="mt-1 text-xs text-rose-500 font-medium">
+              {errors.age}
+            </p>
+          )}
         </div>
-        <TextInput 
-          value={edad} 
-          onChange={cambioEdad} 
-          id="edad" 
-          type="text" 
-          inputMode="numeric"
-          pattern="[0-9]*"
-          placeholder="18" 
-          required 
-          color={errores.edad ? "failure" : (edad !== "" ? "success" : undefined)}
-        />
-        {errores.edad && (
-          <p className="mt-1 text-xs text-rose-500 font-medium">{errores.edad}</p>
-        )}
-      </div>
-      <div className="flex items-center gap-2">
-        <Label htmlFor="sexo">Sexo</Label>
-      </div>
-      <div className="flex items-center gap-2">
-        <Radio value="Masculino" onChange={cambioSexo} id="Masculino" name="sexo" checked={sexo === "Masculino"} />
-        <Label htmlFor="Masculino">Masculino</Label>
-        <Radio value="Femenino" onChange={cambioSexo} id="Femenino" name="sexo" checked={sexo === "Femenino"} />
-        <Label htmlFor="Femenino">Femenino</Label>
-        <Radio value="Otro" onChange={cambioSexo} id="Otro" name="sexo" checked={sexo === "Otro"} />
-        <Label htmlFor="Otro">Otro</Label>
-      </div>
-      <div className="max-w-md">
-        <div className="mb-2 block">
-          <Label htmlFor="rol">Rol</Label>
-        </div>
-        <Select value={rol} onChange={cambioRol} id="rol" required>
-          <option value="">Selecciona un rol</option>
-          <option value="Administrador">Administrador</option>
-          <option value="Programador">Programador</option>
-          <option value="Usuario">Usuario</option>
-        </Select>
-      </div>
-      <div className="max-w-md">
-      <div className="mb-2 block">
-        <Label htmlFor="comentario">¿Qué opinas de nosotros?</Label>
-      </div>
-      <Textarea value={comentario} onChange={cambioComentario} id="comentario" placeholder="Deja un comentario..." required rows={4} />
-    </div>
-    <div>
-      <div className="mb-2 block">
-        <Label htmlFor="fecha" color={errores.fecha ? "failure" : (fecha ? "success" : undefined)}>Fecha de Registro</Label>
-      </div>
-      <Datepicker
-        id="fecha"
-        value={fecha}
-        onChange={cambioFecha}
-        language="es"
-        minDate={obtenerHoy()}
-        required
-      />
-      {errores.fecha && (
-        <p className="mt-1 text-xs text-rose-500 font-medium">{errores.fecha}</p>
-      )}
-    </div>
-    <div className="flex flex-col items-center gap-2 mt-5 mb-3 ">
         <div className="flex items-center gap-2">
-        <Checkbox checked={terminos} onChange={(e) => setTerminos(e.target.checked)} id="terminos" />
-        <Label htmlFor="terminos">¿Estas de acuerdo con los terminos y condiciones?</Label>
+          <Label htmlFor="sexo">Sexo</Label>
         </div>
         <div className="flex items-center gap-2">
-        <Checkbox checked={aviso} onChange={(e) => setAviso(e.target.checked)} id="aviso" />
-        <Label htmlFor="aviso">Acepto el aviso de privacidad</Label>
+          <Radio
+            value="Masculino"
+            onChange={handleGenderChange}
+            id="Masculino"
+            name="sexo"
+            checked={gender === "Masculino"}
+          />
+          <Label htmlFor="Masculino">Masculino</Label>
+          <Radio
+            value="Femenino"
+            onChange={handleGenderChange}
+            id="Femenino"
+            name="sexo"
+            checked={gender === "Femenino"}
+          />
+          <Label htmlFor="Femenino">Femenino</Label>
+          <Radio
+            value="Otro"
+            onChange={handleGenderChange}
+            id="Otro"
+            name="sexo"
+            checked={gender === "Otro"}
+          />
+          <Label htmlFor="Otro">Otro</Label>
         </div>
-      </div>
-    
-    <Button type="submit">Mostrar</Button>
-      
-    </form>
-    <button onClick={limpiarFormulario} className="bg-gray-900 m-2 text-white p-2 border-2 border-white rounded-xl cursor-pointer">
-      Reiniciar
-    </button>
-    
-    <Modal show={showModal} onClose={ocultarModal}>
+        <div className="max-w-md">
+          <div className="mb-2 block">
+            <Label htmlFor="rol">Rol</Label>
+          </div>
+          <Select value={role} onChange={handleRoleChange} id="rol" required>
+            <option value="">Selecciona un rol</option>
+            <option value="Administrador">Administrador</option>
+            <option value="Programador">Programador</option>
+            <option value="Usuario">Usuario</option>
+          </Select>
+        </div>
+        <div className="max-w-md">
+          <div className="mb-2 block">
+            <Label htmlFor="comentario">¿Qué opinas de nosotros?</Label>
+          </div>
+          <Textarea
+            value={comment}
+            onChange={handleCommentChange}
+            id="comentario"
+            placeholder="Deja un comentario..."
+            required
+            rows={4}
+          />
+        </div>
+        <div>
+          <div className="mb-2 block">
+            <Label
+              htmlFor="fecha"
+              color={errors.date ? "failure" : date ? "success" : undefined}
+            >
+              Fecha de Registro
+            </Label>
+          </div>
+          <Datepicker
+            id="fecha"
+            value={date}
+            onChange={handleDateChange}
+            language="es"
+            minDate={getToday()}
+            required
+          />
+          {errors.date && (
+            <p className="mt-1 text-xs text-rose-500 font-medium">
+              {errors.date}
+            </p>
+          )}
+        </div>
+        <div className="flex flex-col items-center gap-2 mt-5 mb-3 ">
+          <div className="flex items-center gap-2">
+            <Checkbox
+              checked={terms}
+              onChange={(e) => setTerms(e.target.checked)}
+              id="terminos"
+            />
+            <Label htmlFor="terminos">
+              ¿Estas de acuerdo con los terminos y condiciones?
+            </Label>
+          </div>
+          <div className="flex items-center gap-2">
+            <Checkbox
+              checked={privacyNotice}
+              onChange={(e) => setPrivacyNotice(e.target.checked)}
+              id="aviso"
+            />
+            <Label htmlFor="aviso">Acepto el aviso de privacidad</Label>
+          </div>
+        </div>
+
+        <Button type="submit" onClick={() => setAction("save")}>
+          Guardar
+        </Button>
+        <Button type="submit" onClick={() => setAction("show")}>
+          Mostrar
+        </Button>
+        <button
+          type="button"
+          onClick={resetForm}
+          className="bg-gray-900 text-white py-2 hover:bg-gray-800 rounded-xl cursor-pointer"
+        >
+          Reiniciar
+        </button>
+      </form>
+
+      <Modal show={showModal} onClose={closeModal}>
         <ModalHeader className="border-b border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white rounded-t-lg !p-5">
           Softwareland
         </ModalHeader>
 
         <ModalBody className="p-6 bg-gray-950">
           <div>
-            <p>{nombre} {apellidos}</p>
+            <p>
+              {firstName} {lastName}
+            </p>
             <p>{email}</p>
             <p>{password}</p>
-            <p>{password2}</p>
-            <p>{edad}</p>
-            <p>{sexo}</p>
-            <p>{rol}</p>
-            <p>{comentario}</p>
-            <p>{fecha?.toLocaleDateString()}</p>
-            <p>{terminos.toString()}</p>
-            <p>{aviso.toString()}</p>
+            <p>{confirmPassword}</p>
+            <p>{age}</p>
+            <p>{gender}</p>
+            <p>{role}</p>
+            <p>{comment}</p>
+            <p>{date?.toLocaleDateString()}</p>
+            <p>{terms.toString()}</p>
+            <p>{privacyNotice.toString()}</p>
           </div>
         </ModalBody>
 
         <ModalFooter className="flex justify-end gap-3 border-t border-gray-100 dark:border-gray-800 p-4 bg-gray-50 dark:bg-gray-900 rounded-b-lg">
-          <button onClick={ocultarModal}
-            className="px-4 py-2 text-white bg-red-600 hover:bg-red-700 rounded transition-colors cursor-pointer">
+          <button
+            type="button"
+            onClick={closeModal}
+            className="px-4 py-2 text-white bg-red-600 hover:bg-red-700 rounded transition-colors cursor-pointer"
+          >
             Cerrar
           </button>
         </ModalFooter>

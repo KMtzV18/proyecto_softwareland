@@ -1,7 +1,7 @@
 "use client";
 import { Carousel } from "flowbite-react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {faChevronLeft,faChevronRight} from "@fortawesome/free-solid-svg-icons";
+import { faChevronLeft, faChevronRight } from "@fortawesome/free-solid-svg-icons";
 
 export default function MiCarousel() {
   const imagenes: string[] = [
@@ -36,7 +36,7 @@ export default function MiCarousel() {
           </div>
         }
       >
-        {/* Diapositiva con texto personalizado */}
+        {/* Diapositiva con texto */}
         {imagenes.map((imagen, index) => (
           <div
             className="relative w-full h-full bg-zinc-950 flex items-center justify-center"
