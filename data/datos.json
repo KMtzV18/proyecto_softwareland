@@ -7,27 +7,6 @@
     "imagen": "/imgs/itsur.jpg"
   },
   {
-    "producto": "Teclado Mecánico",
-    "color": "Negro",
-    "categoria": "Electrónica",
-    "precio": 85.50,
-    "imagen": "/imgs/next.jpg"
-  },
-  {
-    "producto": "Ratón Inalámbrico",
-    "color": "Blanco",
-    "categoria": "Electrónica",
-    "precio": 45.00,
-    "imagen": "/imgs/react.jpg"
-  },
-  {
-    "producto": "Monitor 4K",
-    "color": "Plata",
-    "categoria": "Electrónica",
-    "precio": 350.00,
-    "imagen": "/imgs/SoftLand.jpg"
-  },
-  {
     "producto": "Auriculares Bluetooth",
     "color": "Azul",
     "categoria": "Electrónica",
@@ -40,27 +19,6 @@
     "categoria": "Ropa",
     "precio": 15.99,
     "imagen": "/imgs/typescript.jpg"
-  },
-  {
-    "producto": "Pantalón Vaquero",
-    "color": "Azul Marino",
-    "categoria": "Ropa",
-    "precio": 49.99,
-    "imagen": "/imgs/itsur.jpg"
-  },
-  {
-    "producto": "Chaqueta de Invierno",
-    "color": "Verde",
-    "categoria": "Ropa",
-    "precio": 89.90,
-    "imagen": "/imgs/next.jpg"
-  },
-  {
-    "producto": "Zapatillas Deportivas",
-    "color": "Blanco",
-    "categoria": "Calzado",
-    "precio": 75.00,
-    "imagen": "/imgs/react.jpg"
   },
   {
     "producto": "Botas de Cuero",
@@ -84,20 +42,6 @@
     "imagen": "/imgs/typescript.jpg"
   },
   {
-    "producto": "Cojín Decorativo",
-    "color": "Naranja",
-    "categoria": "Hogar",
-    "precio": 12.00,
-    "imagen": "/imgs/itsur.jpg"
-  },
-  {
-    "producto": "Manta de Lana",
-    "color": "Gris",
-    "categoria": "Hogar",
-    "precio": 35.00,
-    "imagen": "/imgs/next.jpg"
-  },
-  {
     "producto": "Silla Ergonómica",
     "color": "Negro",
     "categoria": "Muebles",
@@ -110,33 +54,5 @@
     "categoria": "Muebles",
     "precio": 220.00,
     "imagen": "/imgs/SoftLand.jpg"
-  },
-  {
-    "producto": "Mochila de Viaje",
-    "color": "Verde Oliva",
-    "categoria": "Accesorios",
-    "precio": 55.00,
-    "imagen": "/imgs/tailwind.jpg"
-  },
-  {
-    "producto": "Reloj de Pulsera",
-    "color": "Plata",
-    "categoria": "Accesorios",
-    "precio": 180.00,
-    "imagen": "/imgs/typescript.jpg"
-  },
-  {
-    "producto": "Gafas de Sol",
-    "color": "Carey",
-    "categoria": "Accesorios",
-    "precio": 45.00,
-    "imagen": "/imgs/itsur.jpg"
-  },
-  {
-    "producto": "Botella de Agua Térmica",
-    "color": "Cian",
-    "categoria": "Deportes",
-    "precio": 18.50,
-    "imagen": "/imgs/next.jpg"
   }
 ]

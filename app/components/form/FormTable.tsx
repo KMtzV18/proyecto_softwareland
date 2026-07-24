@@ -2,7 +2,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeadCell, TableRow } from 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash, faTrash, faPencil } from "@fortawesome/free-solid-svg-icons";
 import { useState } from "react";
-import ModalEditar from "./ModalEditar";
+import EditModal from "./EditModal";
 
 export interface UserRecord {
   firstName: string;
@@ -18,13 +18,13 @@ export interface UserRecord {
 
 export type Registro = UserRecord;
 
-interface TablaFormularioProps {
+interface FormTableProps {
   records?: UserRecord[];
   onDelete?: (index: number) => void;
   onEdit?: (index: number, editedRecord: UserRecord) => void;
 }
 
-export default function TablaFormulario({ records = [], onDelete, onEdit }: TablaFormularioProps) {
+export default function FormTable({ records = [], onDelete, onEdit }: FormTableProps) {
   const [passwordVisibility, setPasswordVisibility] = useState<Record<number, boolean>>({});
   const [showEditModal, setShowEditModal] = useState<boolean>(false);
   const [editIndex, setEditIndex] = useState<number | null>(null);
@@ -142,7 +142,7 @@ export default function TablaFormulario({ records = [], onDelete, onEdit }: Tabl
         </TableBody>
       </Table>
 
-      <ModalEditar
+      <EditModal
         showEditModal={showEditModal}
         onClose={handleCloseEdit}
         editForm={editForm}

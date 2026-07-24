@@ -1,4 +1,4 @@
-interface ImagenProps {
+interface ImageComponentProps {
   src: string;
   alt: string;
   tamanoBorde?: string;
@@ -7,16 +7,15 @@ interface ImagenProps {
   colorSombra?: string;
 }
 
-export default function Imagen({ 
+export default function ImageComponent({ 
   src, 
   alt, 
   tamanoBorde = 'rounded-lg', 
   altura = 'h-80', 
   ancho = 'w-100',
   colorSombra = 'shadow-lg'
-}: ImagenProps) {
+}: ImageComponentProps) {
   return (
-    
     <div className={`my-4 overflow-hidden inline-block ${tamanoBorde} ${altura} ${ancho} ${colorSombra}`}>
       <img 
         src={src} 

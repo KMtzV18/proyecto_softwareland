@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { Modal, ModalHeader, ModalBody, ModalFooter } from "flowbite-react";
 
-export default function BotonModal() {
+export default function ModalButton() {
   const [showModal, setShowModal] = useState<boolean>(false);
 
   const mostrarModal = (): void => {

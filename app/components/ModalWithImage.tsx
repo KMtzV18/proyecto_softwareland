@@ -2,12 +2,12 @@
 import { useState } from "react";
 import { Modal, ModalHeader, ModalBody, ModalFooter } from "flowbite-react";
 
-
 interface ModalProps {
     src: string;
     alt?: string;
 }
-export default function ModalConImagen({src, alt}: ModalProps) {
+
+export default function ModalWithImage({src, alt}: ModalProps) {
     const [showModal, setShowModal] = useState<boolean>(false);
     const mostrarModal = (): void => {
         setShowModal(true);

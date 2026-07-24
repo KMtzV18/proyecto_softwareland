@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 
-export default function ImagenCambiante() {
+export default function ChangingImage() {
     const imagenes: string[] = ["/imgs/SoftLand.jpg", "/imgs/itsur.jpg"];
     const [imagen, setImagen] = useState<string>(imagenes[0]);
 

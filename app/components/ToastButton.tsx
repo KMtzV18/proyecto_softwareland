@@ -7,7 +7,7 @@ export default function BotonToast() {
     const [visible, setVisible] = useState<boolean>(false);
 
 
-    const mostrarToast = (): void => {
+    const showToast = (): void => {
         setVisible(true);
         
         setTimeout(() => {
@@ -18,7 +18,7 @@ export default function BotonToast() {
     return (
         <div className=" z-50 flex flex-col items-center justify-center p-4 relative">
             <button 
-                onClick={mostrarToast} 
+                onClick={showToast} 
                 className="m-2 bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded shadow-md transition-colors"
             >
                 Mostrar toast

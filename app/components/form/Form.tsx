@@ -11,13 +11,13 @@ import {
   Select,
   Textarea,
 } from "flowbite-react";
-import { UserRecord } from "./TablaFormulario";
+import { UserRecord } from "./FormTable";
 
-interface FormularioProps {
+interface FormProps {
   onSave?: (record: UserRecord) => void;
 }
 
-export default function Formulario({ onSave }: FormularioProps) {
+export default function Form({ onSave }: FormProps) {
   const [date, setDate] = useState<Date | null>(new Date());
   const [terms, setTerms] = useState(false);
   const [privacyNotice, setPrivacyNotice] = useState(false);
@@ -278,7 +278,7 @@ export default function Formulario({ onSave }: FormularioProps) {
         <div>
           <div className="mb-2 block">
             <Label
-              htmlFor="nombre"
+              htmlFor="first-name"
               color={
                 errors.firstName
                   ? "failure"
@@ -293,7 +293,7 @@ export default function Formulario({ onSave }: FormularioProps) {
           <TextInput
             value={firstName}
             onChange={handleFirstNameChange}
-            id="nombre"
+            id="first-name"
             type="text"
             placeholder="Juan"
             required
@@ -314,7 +314,7 @@ export default function Formulario({ onSave }: FormularioProps) {
         <div>
           <div className="mb-2 block">
             <Label
-              htmlFor="apellidos"
+              htmlFor="last-name"
               color={
                 errors.lastName
                   ? "failure"
@@ -329,7 +329,7 @@ export default function Formulario({ onSave }: FormularioProps) {
           <TextInput
             value={lastName}
             onChange={handleLastNameChange}
-            id="apellidos"
+            id="last-name"
             type="text"
             placeholder="Pérez"
             required
@@ -385,24 +385,24 @@ export default function Formulario({ onSave }: FormularioProps) {
         </div>
         <div>
           <div className="mb-2 block">
-            <Label htmlFor="contrasenia">Contraseña</Label>
+            <Label htmlFor="password">Contraseña</Label>
           </div>
           <TextInput
             value={password}
             onChange={handlePasswordChange}
-            id="contrasenia"
+            id="password"
             type="password"
             required
           />
         </div>
         <div>
           <div className="mb-2 block">
-            <Label htmlFor="contrasenia2">Verificar Contraseña</Label>
+            <Label htmlFor="confirm-password">Verificar Contraseña</Label>
           </div>
           <TextInput
             value={confirmPassword}
             onChange={handleConfirmPasswordChange}
-            id="contrasenia2"
+            id="confirm-password"
             type="password"
             required
           />
@@ -410,7 +410,7 @@ export default function Formulario({ onSave }: FormularioProps) {
         <div>
           <div className="mb-2 block">
             <Label
-              htmlFor="edad"
+              htmlFor="age"
               color={
                 errors.age ? "failure" : age !== "" ? "success" : undefined
               }
@@ -421,7 +421,7 @@ export default function Formulario({ onSave }: FormularioProps) {
           <TextInput
             value={age}
             onChange={handleAgeChange}
-            id="edad"
+            id="age"
             type="text"
             inputMode="numeric"
             pattern="[0-9]*"
@@ -438,39 +438,39 @@ export default function Formulario({ onSave }: FormularioProps) {
           )}
         </div>
         <div className="flex items-center gap-2">
-          <Label htmlFor="sexo">Sexo</Label>
+          <Label htmlFor="gender">Sexo</Label>
         </div>
         <div className="flex items-center gap-2">
           <Radio
             value="Masculino"
             onChange={handleGenderChange}
-            id="Masculino"
-            name="sexo"
+            id="gender-male"
+            name="gender"
             checked={gender === "Masculino"}
           />
-          <Label htmlFor="Masculino">Masculino</Label>
+          <Label htmlFor="gender-male">Masculino</Label>
           <Radio
             value="Femenino"
             onChange={handleGenderChange}
-            id="Femenino"
-            name="sexo"
+            id="gender-female"
+            name="gender"
             checked={gender === "Femenino"}
           />
-          <Label htmlFor="Femenino">Femenino</Label>
+          <Label htmlFor="gender-female">Femenino</Label>
           <Radio
             value="Otro"
             onChange={handleGenderChange}
-            id="Otro"
-            name="sexo"
+            id="gender-other"
+            name="gender"
             checked={gender === "Otro"}
           />
-          <Label htmlFor="Otro">Otro</Label>
+          <Label htmlFor="gender-other">Otro</Label>
         </div>
         <div className="max-w-md">
           <div className="mb-2 block">
-            <Label htmlFor="rol">Rol</Label>
+            <Label htmlFor="role">Rol</Label>
           </div>
-          <Select value={role} onChange={handleRoleChange} id="rol" required>
+          <Select value={role} onChange={handleRoleChange} id="role" required>
             <option value="">Selecciona un rol</option>
             <option value="Administrador">Administrador</option>
             <option value="Programador">Programador</option>
@@ -479,12 +479,12 @@ export default function Formulario({ onSave }: FormularioProps) {
         </div>
         <div className="max-w-md">
           <div className="mb-2 block">
-            <Label htmlFor="comentario">¿Qué opinas de nosotros?</Label>
+            <Label htmlFor="comment">¿Qué opinas de nosotros?</Label>
           </div>
           <Textarea
             value={comment}
             onChange={handleCommentChange}
-            id="comentario"
+            id="comment"
             placeholder="Deja un comentario..."
             required
             rows={4}
@@ -493,14 +493,14 @@ export default function Formulario({ onSave }: FormularioProps) {
         <div>
           <div className="mb-2 block">
             <Label
-              htmlFor="fecha"
+              htmlFor="registration-date"
               color={errors.date ? "failure" : date ? "success" : undefined}
             >
               Fecha de Registro
             </Label>
           </div>
           <Datepicker
-            id="fecha"
+            id="registration-date"
             value={date}
             onChange={handleDateChange}
             language="es"
@@ -518,9 +518,9 @@ export default function Formulario({ onSave }: FormularioProps) {
             <Checkbox
               checked={terms}
               onChange={(e) => setTerms(e.target.checked)}
-              id="terminos"
+              id="terms"
             />
-            <Label htmlFor="terminos">
+            <Label htmlFor="terms">
               ¿Estas de acuerdo con los terminos y condiciones?
             </Label>
           </div>
@@ -528,9 +528,9 @@ export default function Formulario({ onSave }: FormularioProps) {
             <Checkbox
               checked={privacyNotice}
               onChange={(e) => setPrivacyNotice(e.target.checked)}
-              id="aviso"
+              id="privacy-notice"
             />
-            <Label htmlFor="aviso">Acepto el aviso de privacidad</Label>
+            <Label htmlFor="privacy-notice">Acepto el aviso de privacidad</Label>
           </div>
         </div>
 

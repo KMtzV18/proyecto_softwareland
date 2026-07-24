@@ -1,7 +1,7 @@
 import { Modal, ModalHeader, ModalBody, ModalFooter, Button, Label, TextInput, Select, Textarea, Radio } from "flowbite-react";
-import { UserRecord } from "./TablaFormulario";
+import { UserRecord } from "./FormTable";
 
-interface ModalEditarProps {
+interface EditModalProps {
   showEditModal: boolean;
   onClose: () => void;
   editForm: UserRecord;
@@ -9,13 +9,13 @@ interface ModalEditarProps {
   onSave: (e: React.FormEvent) => void;
 }
 
-export default function ModalEditar({
+export default function EditModal({
   showEditModal,
   onClose,
   editForm,
   setEditForm,
   onSave,
-}: ModalEditarProps) {
+}: EditModalProps) {
   return (
     <Modal show={showEditModal} onClose={onClose}>
       <ModalHeader className="border-b border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white rounded-t-lg !p-5">
@@ -25,18 +25,18 @@ export default function ModalEditar({
         <ModalBody className="p-6 bg-gray-900 text-white space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <Label htmlFor="edit-nombre" className="text-white">Nombre</Label>
+              <Label htmlFor="edit-first-name" className="text-white">Nombre</Label>
               <TextInput
-                id="edit-nombre"
+                id="edit-first-name"
                 value={editForm.firstName}
                 onChange={(e) => setEditForm(prev => ({ ...prev, firstName: e.target.value }))}
                 required
               />
             </div>
             <div>
-              <Label htmlFor="edit-apellidos" className="text-white">Apellidos</Label>
+              <Label htmlFor="edit-last-name" className="text-white">Apellidos</Label>
               <TextInput
-                id="edit-apellidos"
+                id="edit-last-name"
                 value={editForm.lastName}
                 onChange={(e) => setEditForm(prev => ({ ...prev, lastName: e.target.value }))}
                 required
@@ -57,9 +57,9 @@ export default function ModalEditar({
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <Label htmlFor="edit-contrasenia" className="text-white">Contraseña</Label>
+              <Label htmlFor="edit-password" className="text-white">Contraseña</Label>
               <TextInput
-                id="edit-contrasenia"
+                id="edit-password"
                 type="text"
                 value={editForm.password}
                 onChange={(e) => setEditForm(prev => ({ ...prev, password: e.target.value }))}
@@ -67,9 +67,9 @@ export default function ModalEditar({
               />
             </div>
             <div>
-              <Label htmlFor="edit-edad" className="text-white">Edad</Label>
+              <Label htmlFor="edit-age" className="text-white">Edad</Label>
               <TextInput
-                id="edit-edad"
+                id="edit-age"
                 type="text"
                 value={editForm.age}
                 onChange={(e) => setEditForm(prev => ({ ...prev, age: e.target.value }))}
@@ -83,41 +83,41 @@ export default function ModalEditar({
             <div className="flex items-center gap-4">
               <div className="flex items-center gap-2">
                 <Radio
-                  id="edit-sexo-m"
-                  name="edit-sexo"
+                  id="edit-gender-male"
+                  name="edit-gender"
                   value="Masculino"
                   checked={editForm.gender === "Masculino"}
                   onChange={(e) => setEditForm(prev => ({ ...prev, gender: e.target.value }))}
                 />
-                <Label htmlFor="edit-sexo-m" className="text-white">Masculino</Label>
+                <Label htmlFor="edit-gender-male" className="text-white">Masculino</Label>
               </div>
               <div className="flex items-center gap-2">
                 <Radio
-                  id="edit-sexo-f"
-                  name="edit-sexo"
+                  id="edit-gender-female"
+                  name="edit-gender"
                   value="Femenino"
                   checked={editForm.gender === "Femenino"}
                   onChange={(e) => setEditForm(prev => ({ ...prev, gender: e.target.value }))}
                 />
-                <Label htmlFor="edit-sexo-f" className="text-white">Femenino</Label>
+                <Label htmlFor="edit-gender-female" className="text-white">Femenino</Label>
               </div>
               <div className="flex items-center gap-2">
                 <Radio
-                  id="edit-sexo-o"
-                  name="edit-sexo"
+                  id="edit-gender-other"
+                  name="edit-gender"
                   value="Otro"
                   checked={editForm.gender === "Otro"}
                   onChange={(e) => setEditForm(prev => ({ ...prev, gender: e.target.value }))}
                 />
-                <Label htmlFor="edit-sexo-o" className="text-white">Otro</Label>
+                <Label htmlFor="edit-gender-other" className="text-white">Otro</Label>
               </div>
             </div>
           </div>
 
           <div>
-            <Label htmlFor="edit-rol" className="text-white">Rol</Label>
+            <Label htmlFor="edit-role" className="text-white">Rol</Label>
             <Select
-              id="edit-rol"
+              id="edit-role"
               value={editForm.role}
               onChange={(e) => setEditForm(prev => ({ ...prev, role: e.target.value }))}
               required
@@ -130,9 +130,9 @@ export default function ModalEditar({
           </div>
 
           <div>
-            <Label htmlFor="edit-comentario" className="text-white">Comentarios</Label>
+            <Label htmlFor="edit-comment" className="text-white">Comentarios</Label>
             <Textarea
-              id="edit-comentario"
+              id="edit-comment"
               rows={3}
               value={editForm.comment}
               onChange={(e) => setEditForm(prev => ({ ...prev, comment: e.target.value }))}

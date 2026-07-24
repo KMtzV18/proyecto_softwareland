@@ -1,16 +1,16 @@
-interface TituloProps {
+interface TitleProps {
   texto: string;
   fuente?: string;
   tamano?: string;
   color?: string;
 }
 
-export default function Titulo({ 
+export default function Title({ 
   texto, 
   fuente = 'font-sans', 
   tamano = 'text-3xl', 
   color = 'text-black',
-}: TituloProps) {
+}: TitleProps) {
   return (
     <h1 className={`${fuente} ${tamano} ${color} font-bold my-4`}>
       {texto}
